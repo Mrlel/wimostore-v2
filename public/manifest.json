@@ -1,0 +1,94 @@
+{
+    "id": "/",
+    "name": "WimoStock",
+    "short_name": "Wimo",
+    "description": "Application de gestion de stock complète",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#ffde59",
+    "orientation": "portrait-primary",
+    "scope": "/",
+    "lang": "fr",
+    "dir": "ltr",
+    "categories": ["business", "productivité", "utilité"],
+    "icons": [
+      {
+        "src": "/icon-192x192.svg",
+        "sizes": "192x192",
+        "type": "image/svg+xml",
+        "purpose": "any maskable"
+      },
+      {
+        "src": "/icon-512x512.svg",
+        "sizes": "512x512",
+        "type": "image/svg+xml",
+        "purpose": "any maskable"
+      }
+    ],
+    "screenshots": [
+      {
+        "src": "/screenshots/desktop-1.png",
+        "sizes": "1280x720",
+        "type": "image/png",
+        "form_factor": "wide",
+        "label": "Tableau de bord principal"
+      },
+      {
+        "src": "/screenshots/mobile-1.png",
+        "sizes": "390x844",
+        "type": "image/png",
+        "form_factor": "narrow",
+        "label": "Interface mobile"
+      }
+    ],
+    "shortcuts": [
+      {
+        "name": "Nouvelle Vente",
+        "short_name": "Vente",
+        "description": "Créer une nouvelle vente",
+        "url": "/ventes/create",
+        "icons": [
+          {
+            "src": "/icon-192x192.svg",
+            "sizes": "96x96",
+            "type": "image/svg+xml"
+          }
+        ]
+      },
+      {
+        "name": "Inventaire",
+        "short_name": "Stock",
+        "description": "Vérifier l'inventaire",
+        "url": "/inventaire",
+        "icons": [
+          {
+            "src": "/icon-192x192.svg",
+            "sizes": "96x96",
+            "type": "image/svg+xml"
+          }
+        ]
+      },
+      {
+        "name": "Produits",
+        "short_name": "Produits",
+        "description": "Gérer les produits",
+        "url": "/produits",
+        "icons": [
+          {
+            "src": "/icon-192x192.svg",
+            "sizes": "96x96",
+            "type": "image/svg+xml"
+          }
+        ]
+      }
+    ],
+    "related_applications": [],
+    "prefer_related_applications": false,
+    "edge_side_panel": {
+      "preferred_width": 400
+    },
+    "launch_handler": {
+      "client_mode": "navigate-existing"
+    }
+  }
