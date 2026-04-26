@@ -57,6 +57,8 @@ class CommandeController extends Controller
             'success' => true,
             'message' => 'Produit ajouté au panier',
             'count'   => array_sum(array_column($cart, 'quantite')),
+            'items'   => array_values($cart),
+            'total'   => collect($cart)->sum(fn($l) => $l['prix_unitaire'] * $l['quantite']),
         ]);
     }
 
@@ -86,6 +88,7 @@ class CommandeController extends Controller
             'success' => true,
             'count'   => array_sum(array_column($cart, 'quantite')),
             'total'   => $total,
+            'items'   => array_values($cart),
         ]);
     }
 
@@ -100,6 +103,8 @@ class CommandeController extends Controller
         return response()->json([
             'success' => true,
             'count'   => array_sum(array_column($cart, 'quantite')),
+            'items'   => array_values($cart),
+            'total'   => collect($cart)->sum(fn($l) => $l['prix_unitaire'] * $l['quantite']),
         ]);
     }
 

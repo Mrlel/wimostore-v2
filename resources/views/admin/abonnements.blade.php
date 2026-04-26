@@ -203,118 +203,24 @@
     </div>
 </div>
 
-<!-- Bootstrap Icons -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-
-<style>
-    .card {
-        border: 2px solid #000;
-    }
-    
-    .card-header {
-        border-bottom: 2px solid #000 !important;
-    }
-    
-    .table th, .table td {
-        border-color: #000 !important;
-    }
-    
-    .btn:hover {
-        opacity: 0.9;
-    }
-    
-    .form-control:focus, .form-select:focus {
-        border-color: #ffde59;
-        box-shadow: 0 0 0 0.2rem rgba(255, 222, 89, 0.25);
-    }
-    
-    .input-group-text {
-        background-color: #f8f9fa;
-        border-color: #000;
-        font-size: 0.875rem;
-    }
-    
-    .price-calculator {
-        background: #f8f9fa;
-        border-radius: 8px;
-        padding: 1rem;
-        margin-bottom: 1rem;
-    }
-</style>
-
+@push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialiser les tooltips
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    const tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el));
 
-    // Calcul automatique du prix en fonction de la durée
-    function calculatePrice(selectElement) {
-        const basePrice = 5000; // Prix pour 30 jours
-        const duree = parseInt(selectElement.value);
-        const form = selectElement.closest('form');
-        const montantInput = form.querySelector('input[name="montant"]');
-        
-        // Calcul proportionnel : (durée / 30) * 5000
-        const nouveauMontant = Math.round((duree / 30) * basePrice);
-        montantInput.value = nouveauMontant;
-        
-        // Mettre à jour le tooltip du bouton
-        const button = form.querySelector('button[type="submit"]');
-        button.setAttribute('data-bs-title', `Renouveler pour ${duree} jours - ${nouveauMontant.toLocaleString()} FCFA`);
-        
-        // Recréer le tooltip avec le nouveau contenu
-        const tooltip = bootstrap.Tooltip.getInstance(button);
-        if (tooltip) {
-            tooltip.dispose();
-        }
-        new bootstrap.Tooltip(button);
+    function calculatePrice(select) {
+        const duree = parseInt(select.value);
+        const form  = select.closest('form');
+        const input = form.querySelector('input[name="montant"]');
+        input.value = Math.round((duree / 30) * 5000);
     }
 
-    // Appliquer le calcul initial et les écouteurs d'événements
-    const dureeSelects = document.querySelectorAll('select[name="duree"]');
-    dureeSelects.forEach(select => {
-        // Calcul initial
-        calculatePrice(select);
-        
-        // Écouteur pour les changements
-        select.addEventListener('change', function() {
-            calculatePrice(this);
-        });
+    document.querySelectorAll('select[name="duree"]').forEach(sel => {
+        calculatePrice(sel);
+        sel.addEventListener('change', () => calculatePrice(sel));
     });
-
-    // Validation des formulaires de renouvellement
-    const renewForms = document.querySelectorAll('form[action="{{ route("abonnements.renew") }}"]');
-    renewForms.forEach(form => {
-        form.addEventListener('submit', function(e) {
-            const duree = this.querySelector('select[name="duree"]');
-            const montant = this.querySelector('input[name="montant"]');
-            
-            if (!duree.value || duree.value < 1) {
-                e.preventDefault();
-                alert('Veuillez sélectionner une durée valide');
-                duree.focus();
-                return;
-            }
-            
-            if (!montant.value || montant.value <= 0) {
-                e.preventDefault();
-                alert('Le montant calculé est invalide');
-                return;
-            }
-            
-            // Confirmation avant renouvellement
-            const confirmation = confirm(`Confirmez-vous le renouvellement pour ${duree.value} jours pour ${parseInt(montant.value).toLocaleString()} FCFA ?`);
-            if (!confirmation) {
-                e.preventDefault();
-            }
-        });
-    });
-
-    // Afficher le prix de base dans une alerte info
-    console.log('💰 Abonnement standard : 30 jours = 5 000 FCFA');
 });
 </script>
+@endpush
+
 @endsection

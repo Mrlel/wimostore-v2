@@ -290,7 +290,7 @@
                 <h2 class="collection-title">Nos Produits</h2>
             </div>
             <div class="sort-bar">
-                <span class="result-count">{{ $produits->count() }} produit(s)</span>
+                <span class="result-count" id="resultCount">{{ $produits->count() }} produit(s)</span>
                 <button class="btn-filter-mobile" id="filterBtn">
                     <i class="bi bi-sliders"></i> Filtrer
                 </button>
@@ -311,6 +311,7 @@
         <div class="product-grid">
             @foreach($produits as $produit)
             <article class="product-card"
+                     data-id="{{ $produit->id }}"
                      data-name="{{ strtolower($produit->nom) }}"
                      data-category="{{ $produit->categorie_id }}">
 
@@ -392,8 +393,23 @@
 
 @push('scripts')
 <script>
-// Bouton filtre mobile → ouvre le drawer catégories
 document.getElementById('filterBtn')?.addEventListener('click', openCatDrawer);
+
+// Mise à jour du compteur lors de la recherche
+const _searchInput = document.getElementById('productSearch');
+const _resultCount = document.getElementById('resultCount');
+if (_searchInput && _resultCount) {
+    _searchInput.addEventListener('input', function () {
+        const q = this.value.trim().toLowerCase();
+        let visible = 0;
+        document.querySelectorAll('.product-card').forEach(p => {
+            const match = !q || (p.dataset.name || '').toLowerCase().includes(q);
+            p.style.display = match ? '' : 'none';
+            if (match) visible++;
+        });
+        _resultCount.textContent = visible + ' produit(s)';
+    });
+}
 </script>
 @endpush
 @endsection

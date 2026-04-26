@@ -8,7 +8,7 @@
 
         <div class="alert border-0 shadow-sm d-flex align-items-center gap-2 mb-4" style="background:#FEF3C7;border-radius:12px;">
             <i class="bi bi-exclamation-triangle-fill" style="color:#F59E0B;font-size:18px;flex-shrink:0;"></i>
-            <span>Votre abonnement a expiré, Renouvelez le pour retrouver l'accès complet.
+            <span class="text-dark">Votre abonnement a expiré, Renouvelez le pour retrouver l'accès complet.
             </span>
         </div>
       
@@ -34,8 +34,14 @@
             </div>
         </div>
 
+          <a  href="https://wa.me/2250585986100?text=Bonjour%20Wimo%20👋%0AJe%20souhaite%20renouveler%20mon%20abonnement.%0A----------------------------------------------%0ANom%20boutique%20:%20{{ urlencode(auth()->user()->cabine->nom_cab) }}%0ACode%20boutique%20:%20{{ urlencode(auth()->user()->cabine->code) }}%0A----------------------------------------------%0AMerci.%20🙏"
+        type="submit" class="btn fw-bold w-100 py-3" style="background-color:#fbc926;border-radius:10px;font-size:15px;">
+                        <i class="bi bi-credit-card me-2"></i>
+                        Payer {{ number_format(5000, 0, ',', ' ') }} FCFA et renouveler
+            </a>
+
         {{-- Formulaire --}}
-        <div class="card border-0 shadow-sm" style="border-radius:16px;">
+        <div class="card border-0 shadow-sm" style="border-radius:16px;" hidden>
             <div class="card-header bg-white border-bottom py-3">
                 <h5 class="mb-0 fw-bold">
                     <i class="bi bi-person-circle me-2" style="color:#fbc926;"></i>Vos informations

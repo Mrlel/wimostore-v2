@@ -79,8 +79,12 @@ class BoutiqueController extends Controller
 
 
     public function Ma_boutique_create(){
-        
         return view('Ma_boutique.create');
+    }
+
+    public function Ma_boutique_success(){
+        $boutique = CabinePage::where('cabine_id', Auth::user()->cabine_id)->first();
+        return view('Ma_boutique.success', compact('boutique'));
     }
 
     public function Ma_boutique_store(Request $request){
@@ -138,7 +142,7 @@ class BoutiqueController extends Controller
             'est_publiee' => 1
         ]);
 
-        return redirect()->route('Ma_boutique')->with('success', 'Page créée avec succès');
+        return redirect()->route('Ma_boutique.success')->with('boutique_url', auth()->user()->cabine->public_url ?? '');
     }
     
     public function Ma_boutique_edit(){

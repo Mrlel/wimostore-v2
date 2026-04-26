@@ -7,41 +7,23 @@
 
     <!-- PWA -->
     <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#000000">
+    <meta name="theme-color" content="#f0c61d">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="WimoStock">
-    <link rel="apple-touch-icon" href="/wim.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="apple-touch-icon" href="/icons/wimo-192x192.png">
     <link rel="shortcut icon" href="/wim.png" type="image/x-icon">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <!-- PWA Meta Tags (minimal) -->
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#fff">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="DSP Cabine">
-    
-    <!-- Icons -->
-    <link rel="apple-touch-icon" href="/wim.png">
-    <link rel="shortcut icon" href="/wim.png" type="image/x-icon">
-    
+
     <!-- Stylesheets -->
-    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-     <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
-    <!-- Libs -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
     /* ═══════════════════════════════════════════
@@ -882,6 +864,26 @@
             <span class="sidebar-shop-name">{{ Auth::user()->cabine->nom_cab ?? 'Ma Boutique' }}</span>
         </a>
 
+        @php $hasBoutiqueNav = \App\Models\CabinePage::where('cabine_id', auth()->user()->cabine_id)->exists(); @endphp
+        @if(!$hasBoutiqueNav)
+        <a href="{{ route('Ma_boutique.create') }}" style="
+            margin: 0 16px 12px;
+            padding: 10px 14px;
+            background: rgba(240,198,29,0.1);
+            border: 1px dashed rgba(240,198,29,0.4);
+            border-radius: 8px;
+            display: flex; align-items: center; gap: 8px;
+            text-decoration: none;
+            transition: background .2s;
+            flex-shrink: 0;
+        " onmouseover="this.style.background='rgba(240,198,29,0.18)'" onmouseout="this.style.background='rgba(240,198,29,0.1)'">
+            <i class="bi bi-plus-circle" style="color:#f0c61d;font-size:0.9rem;"></i>
+            <span style="font-size:0.78rem;font-weight:700;color:#f0c61d;letter-spacing:0.04em;text-transform:uppercase;">
+                Créer ma boutique
+            </span>
+        </a>
+        @endif
+
         <!-- Nav items -->
         <span class="nav-section-label">Navigation</span>
 
@@ -1167,5 +1169,221 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 @stack('scripts')
+
+<!-- ═══════════════════════════════════════════════════════════
+     PWA — Service Worker + Bannière d'installation
+═══════════════════════════════════════════════════════════ -->
+
+{{-- ═══════════════════════════════════════════════════════════
+     POP-UP PREMIÈRE CONNEXION — Créer ma boutique
+═══════════════════════════════════════════════════════════ --}}
+@auth
+@php
+    $hasBoutique = \App\Models\CabinePage::where('cabine_id', auth()->user()->cabine_id)->exists();
+    $isFirstLogin = !auth()->user()->boutique_popup_seen && !$hasBoutique;
+@endphp
+
+@if($isFirstLogin || (!$hasBoutique))
+<div id="boutiquePopup" style="
+    display: none;
+    position: fixed; inset: 0; z-index: 99998;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(6px);
+    align-items: center; justify-content: center;
+    padding: 16px;
+">
+    <div style="
+        background: #fff; border-radius: 20px;
+        max-width: 480px; width: 100%;
+        padding: 36px 32px;
+        box-shadow: 0 24px 60px rgba(0,0,0,0.3);
+        animation: popupIn .4s cubic-bezier(.34,1.56,.64,1);
+        position: relative;
+    ">
+        <style>
+            @keyframes popupIn {
+                from { opacity:0; transform:scale(.85) translateY(20px); }
+                to   { opacity:1; transform:scale(1) translateY(0); }
+            }
+        </style>
+
+        {{-- Bouton fermer --}}
+        <button onclick="closeBoutiquePopup()" style="
+            position:absolute; top:14px; right:16px;
+            background:none; border:none; font-size:1.2rem;
+            color:#aaa; cursor:pointer; line-height:1;
+        ">✕</button>
+
+        {{-- Icône --}}
+        <div style="
+            width:64px; height:64px; border-radius:16px;
+            background:rgba(240,198,29,0.12);
+            border:2px solid rgba(240,198,29,0.3);
+            display:flex; align-items:center; justify-content:center;
+            margin-bottom:20px; font-size:1.8rem;
+        ">🛍️</div>
+
+        @if($isFirstLogin)
+        <h2 style="font-size:1.4rem;font-weight:800;color:#111;margin-bottom:8px;">
+            Bienvenue sur WimoStock ! 🎉
+        </h2>
+        <p style="color:#666;font-size:0.9rem;line-height:1.6;margin-bottom:24px;">
+            Votre compte est prêt. Pour commencer à vendre en ligne, créez votre boutique en quelques minutes.
+            C'est simple, rapide et <strong>gratuit</strong> !
+        </p>
+        @else
+        <h2 style="font-size:1.4rem;font-weight:800;color:#111;margin-bottom:8px;">
+            Vous n'avez pas encore de boutique
+        </h2>
+        <p style="color:#666;font-size:0.9rem;line-height:1.6;margin-bottom:24px;">
+            Créez votre boutique en ligne pour vendre vos produits directement à vos clients.
+        </p>
+        @endif
+
+        <div style="display:flex;flex-direction:column;gap:10px;">
+            <a href="{{ route('Ma_boutique.create') }}" style="
+                display:flex; align-items:center; justify-content:center; gap:8px;
+                background:#f0c61d; color:#000; font-weight:700;
+                padding:13px 24px; border-radius:10px;
+                text-decoration:none; font-size:0.95rem;
+                transition:all .2s;
+            " onmouseover="this.style.background='#e0b800'" onmouseout="this.style.background='#f0c61d'">
+                <i class="bi bi-shop"></i> Créer ma boutique en ligne
+            </a>
+            <button onclick="closeBoutiquePopup()" style="
+                background:transparent; border:1px solid #e0e0e0;
+                color:#888; padding:10px; border-radius:10px;
+                font-size:0.85rem; cursor:pointer;
+            ">
+                Plus tard
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+(function () {
+    const popup = document.getElementById('boutiquePopup');
+    if (!popup) return;
+
+    @if($isFirstLogin)
+    // Première connexion : afficher après 1.5s
+    setTimeout(() => { popup.style.display = 'flex'; }, 1500);
+    // Marquer comme vu via AJAX
+    fetch('/api/mark-popup-seen', { method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Content-Type': 'application/json' } }).catch(() => {});
+    @endif
+
+    window.closeBoutiquePopup = function () {
+        popup.style.opacity = '0';
+        popup.style.transition = 'opacity .25s';
+        setTimeout(() => popup.style.display = 'none', 250);
+    };
+
+    // Fermer en cliquant sur l'overlay
+    popup.addEventListener('click', function (e) {
+        if (e.target === popup) closeBoutiquePopup();
+    });
+})();
+</script>
+@endif
+@endauth
+
+{{-- Bannière d'installation --}}
+<div id="pwa-install-banner" style="
+    display: none;
+    position: fixed; bottom: 0; left: 0; right: 0;
+    z-index: 99999;
+    background: #111;
+    border-top: 1px solid rgba(240,198,29,0.25);
+    padding: 14px 20px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    box-shadow: 0 -4px 24px rgba(0,0,0,0.5);
+">
+    <div style="display:flex; align-items:center; gap:12px;">
+        <img src="/icons/wimo-192x192.png"
+             style="width:44px;height:44px;border-radius:10px;flex-shrink:0;"
+             alt="WimoStock">
+        <div>
+            <div style="color:#fff;font-weight:600;font-size:0.9rem;line-height:1.2;">
+                Installer WimoStock
+            </div>
+            <div style="color:rgba(255,255,255,0.45);font-size:0.78rem;margin-top:2px;">
+                Accès rapide depuis votre écran d'accueil
+            </div>
+        </div>
+    </div>
+    <div style="display:flex;gap:8px;flex-shrink:0;">
+        <button onclick="dismissPWABanner()" style="
+            background:transparent;
+            border:1px solid rgba(255,255,255,0.15);
+            color:rgba(255,255,255,0.5);
+            border-radius:8px; padding:8px 14px;
+            font-size:0.82rem; cursor:pointer;">
+            Plus tard
+        </button>
+        <button onclick="installPWA()" style="
+            background:#f0c61d; border:none; color:#000;
+            border-radius:8px; padding:8px 18px;
+            font-size:0.82rem; font-weight:600; cursor:pointer;">
+            Installer
+        </button>
+    </div>
+</div>
+
+<script>
+// ── Service Worker ────────────────────────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js', { scope: '/' })
+            .then(reg => {
+                reg.addEventListener('updatefound', () => {
+                    const sw = reg.installing;
+                    sw.addEventListener('statechange', () => {
+                        if (sw.state === 'installed' && navigator.serviceWorker.controller) {
+                            sw.postMessage({ type: 'SKIP_WAITING' });
+                            window.location.reload();
+                        }
+                    });
+                });
+            })
+            .catch(err => console.warn('[PWA] SW registration failed:', err));
+    });
+}
+
+// ── Bannière d'installation ───────────────────────────────────────────────────
+let _deferredPrompt = null;
+const _banner = document.getElementById('pwa-install-banner');
+
+window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    _deferredPrompt = e;
+    if (!localStorage.getItem('pwa-dismissed')) {
+        _banner.style.display = 'flex';
+    }
+});
+
+function installPWA() {
+    if (!_deferredPrompt) return;
+    _deferredPrompt.prompt();
+    _deferredPrompt.userChoice.then(() => {
+        _deferredPrompt = null;
+        _banner.style.display = 'none';
+    });
+}
+
+function dismissPWABanner() {
+    _banner.style.display = 'none';
+    localStorage.setItem('pwa-dismissed', '1');
+}
+
+window.addEventListener('appinstalled', () => {
+    _banner.style.display = 'none';
+    _deferredPrompt = null;
+});
+</script>
+
 </body>
 </html>

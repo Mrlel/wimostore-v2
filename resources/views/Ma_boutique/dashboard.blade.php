@@ -4,6 +4,22 @@
 <div class="container-fluid py-4">
     @if($boutiques)
     <div class="navigation-header mb-4">
+        <!-- URL de la boutique + copier -->
+        <div class="d-flex align-items-center gap-2 mb-3 p-3 rounded" style="background:#f8f8f8;border:1px solid #e0e0e0;">
+            <i class="bi bi-link-45deg text-muted"></i>
+            <input type="text" id="boutiqueUrlDash" value="{{ $boutiques->cabine->public_url ?? '' }}"
+                   readonly class="form-control form-control-sm border-0 bg-transparent"
+                   style="font-family:monospace;font-size:0.82rem;color:#333;">
+            <a href="{{ $boutiques->cabine->public_url }}" target="_blank"
+               class="btn btn-sm fw-bold text-dark flex-shrink-0" style="background:#f0c61d;">
+                <i class="bi bi-box-arrow-up-right me-1"></i> Visiter
+            </a>
+            <button onclick="copyDashUrl()" id="copyDashBtn"
+                    class="btn btn-sm btn-outline-dark flex-shrink-0">
+                <i class="bi bi-clipboard" id="copyDashIcon"></i>
+                <span id="copyDashText">Copier</span>
+            </button>
+        </div>
         <!-- Pour desktop -->
         <div class="d-none d-lg-flex justify-content-between align-items-center">
             <div class="flex-grow-1"></div> <!-- Espace vide à gauche -->
@@ -12,12 +28,6 @@
                 class="btn text-dark fw-bold px-4" 
                 style="background-color: #ffde59; min-width: 180px;">
                     <i class="bi bi-pencil me-2"></i>Modifier ma boutique
-                </a>
-                <a href="{{ $boutiques->cabine->public_url }}" 
-                target="_blank" 
-                class="btn text-dark fw-bold px-4" 
-                style="background-color: #ffde59; min-width: 180px;">
-                    <i class="bi bi-shop me-2"></i>Voir ma boutique
                 </a>
                 <a href="{{ route('visites', ['code' => $boutiques->cabine->code ?? $boutiques->code]) }}" 
                 class="btn text-white fw-bold px-4"
@@ -35,12 +45,6 @@
                style="background-color: #ffde59; max-width: 200px;">
                 <i class="bi bi-pencil me-1"></i>Modifier
             </a>
-            <a href="{{ $boutiques->cabine->public_url }}" 
-               target="_blank" 
-               class="btn text-dark fw-bold flex-fill text-center" 
-               style="background-color: #ffde59; max-width: 200px;">
-                <i class="bi bi-shop me-1"></i>Voir boutique
-            </a>
             <a href="{{ route('visites', ['code' => $boutiques->cabine->code ?? $boutiques->code]) }}" 
                class="btn text-white fw-bold px-4"
                 style="background-color: #000000; min-width: 180px;">
@@ -57,12 +61,7 @@
                style="background-color: #ffde59;">
                 <i class="bi bi-pencil me-2"></i>Modifier ma boutique
             </a>
-            <a href="{{ $boutiques->cabine->public_url }}" 
-               target="_blank" 
-               class="btn text-dark fw-bold py-2" 
-               style="background-color: #ffde59;">
-                <i class="bi bi-shop me-2"></i>Voir boutique en ligne
-            </a>
+ 
             <a href="{{ route('visites', ['code' => $boutiques->cabine->code ?? $boutiques->code]) }}" 
                class="btn text-white fw-bold px-4"
                 style="background-color: #000000; min-width: 180px;">
@@ -71,12 +70,6 @@
         </div>
     </div>
 </div>
-    @else
-    <a href="{{ route('Ma_boutique.create') }}" 
-                class="btn text-dark fw-bold py-2 text-end" 
-                style="background-color: #ffde59;">
-                    <i class="bi bi-pencil me-2"></i>Créer ma boutique
-                </a>
     @endif
         <!-- Statistiques visites -->
        
@@ -420,10 +413,30 @@
 </style>
 
 <script>
+// ── Copier l'URL de la boutique ───────────────────────────────────────────────
+function copyDashUrl() {
+    const input = document.getElementById('boutiqueUrlDash');
+    const btn   = document.getElementById('copyDashBtn');
+    const icon  = document.getElementById('copyDashIcon');
+    const text  = document.getElementById('copyDashText');
+    if (!input) return;
+    navigator.clipboard.writeText(input.value).then(() => {
+        btn.classList.remove('btn-outline-dark');
+        btn.classList.add('btn-success');
+        icon.className = 'bi bi-check2';
+        text.textContent = 'Copié !';
+        setTimeout(() => {
+            btn.classList.remove('btn-success');
+            btn.classList.add('btn-outline-dark');
+            icon.className = 'bi bi-clipboard';
+            text.textContent = 'Copier';
+        }, 2500);
+    }).catch(() => { input.select(); document.execCommand('copy'); });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // Gestion de la modification des gestionnaires
-    const editButtons = document.querySelectorAll('.edit-gestionnaire-btn');
-    
+    const editButtons = document.querySelectorAll('.edit-gestionnaire-btn');    
     editButtons.forEach(button => {
         button.addEventListener('click', function() {
             const id = this.getAttribute('data-id');

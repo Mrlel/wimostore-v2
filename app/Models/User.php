@@ -35,14 +35,16 @@ class User extends Authenticatable implements MustVerifyEmail
         'code_parrain',
         'parrain_id',
         'notification_preferences',
-        'password_changed_at'
+        'password_changed_at',
+        'boutique_popup_seen',
     ];
-    
+
     protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
+        'email_verified_at'      => 'datetime',
+        'password'               => 'hashed',
         'notification_preferences' => 'array',
-        'password_changed_at' => 'datetime',
+        'password_changed_at'    => 'datetime',
+        'boutique_popup_seen'    => 'boolean',
     ];
 
     

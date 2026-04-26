@@ -5,19 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', $page->nom_site . ' | ' . $page->cabine->nom_cab)</title>
-    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="icon" href="/wim.png" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-     <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
     <style>
         :root {
@@ -54,54 +48,157 @@
 
         /* ══ NAVBAR ══════════════════════════════════════════════════════════ */
         .navbar-top {
-            background: #000000;
-            border-bottom: 1px solid var(--border);
+            background: #000;
             padding: 0 1.5rem;
-            height: 62px;
-            display: flex; align-items: center; justify-content: space-between;
+            height: 64px;
+            display: flex; align-items: center; gap: 12px;
             position: sticky; top: 0; z-index: 200;
-            backdrop-filter: blur(8px);
             transition: box-shadow .3s;
-            border-radius: 0 0 10px 10px;
         }
-        .navbar-top.scrolled { box-shadow: 0 2px 16px rgba(0,0,0,.07); }
-        .nav-social { display: flex; align-items: center; gap: .2rem; }
-        .nav-social a {
-            font-size: 12px; color: var(--warm-gray); text-decoration: none;
-            padding: 5px 10px; border-radius: 20px;
-            display: flex; align-items: center; gap: .35rem;
-            transition: background .2s, color .2s; white-space: nowrap;
-        }
-        .nav-social a:hover { background: var(--tag-bg); color: var(--charcoal); }
+        .navbar-top.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,.35); }
+
+        /* Logo / brand */
         .brand-logo {
-            font-family: 'DM Sansr', sans-serif;
-            font-size: 1.55rem; font-weight: 600;
-            letter-spacing: .3em; color: white;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1.15rem; font-weight: 700;
+            letter-spacing: .06em; color: #fff;
             text-decoration: none; white-space: nowrap;
-            display: flex; align-items: center; gap: .5rem;
+            display: flex; align-items: center; gap: 8px;
+            flex-shrink: 0;
         }
-        .brand-logo img { height: 32px; width: auto; border-radius: 6px; }
-        .nav-icons { display: flex; align-items: center; gap: .2rem; }
-        .nav-icons a {
-            width: 36px; height: 36px; border-radius: 50%;
+        .brand-logo img { height: 34px; width: auto; border-radius: 8px; }
+
+        /* Barre de recherche centrale */
+        .nav-search {
+            flex: 1; max-width: 480px; margin: 0 auto;
+            position: relative;
+        }
+        .nav-search input {
+            width: 100%;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 50px;
+            padding: 9px 16px 9px 40px;
+            color: #fff;
+            font-size: 13px;
+            font-family: 'DM Sans', sans-serif;
+            outline: none;
+            transition: background .2s, border-color .2s;
+        }
+        .nav-search input::placeholder { color: rgba(255,255,255,0.4); }
+        .nav-search input:focus {
+            background: rgba(255,255,255,0.13);
+            border-color: rgba(200,169,126,0.6);
+        }
+        .nav-search .search-icon {
+            position: absolute; left: 13px; top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255,255,255,0.4);
+            font-size: 14px; pointer-events: none;
+        }
+        .nav-search .search-clear {
+            position: absolute; right: 12px; top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255,255,255,0.35);
+            font-size: 13px; cursor: pointer;
+            display: none; background: none; border: none; padding: 0;
+            transition: color .2s;
+        }
+        .nav-search .search-clear:hover { color: #fff; }
+
+        /* Résultats de recherche dropdown */
+        .search-results {
+            position: absolute; top: calc(100% + 8px); left: 0; right: 0;
+            background: #1a1a1a;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 12px 40px rgba(0,0,0,.5);
+            display: none;
+            z-index: 500;
+            max-height: 360px;
+            overflow-y: auto;
+        }
+        .search-results.open { display: block; }
+        .search-result-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 14px; cursor: pointer;
+            transition: background .15s;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .search-result-item:last-child { border-bottom: none; }
+        .search-result-item:hover { background: rgba(255,255,255,0.06); }
+        .search-result-img {
+            width: 40px; height: 48px; border-radius: 8px;
+            object-fit: cover; flex-shrink: 0;
+            background: rgba(255,255,255,0.06);
+        }
+        .search-result-name {
+            font-size: 13px; font-weight: 600; color: #fff;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .search-result-price {
+            font-size: 11px; color: var(--accent); margin-top: 2px;
+        }
+        .search-result-cat {
+            font-size: 10px; color: rgba(255,255,255,0.35); margin-top: 1px;
+        }
+        .search-no-result {
+            padding: 20px; text-align: center;
+            color: rgba(255,255,255,0.35); font-size: 13px;
+        }
+
+        /* Icônes droite */
+        .nav-icons { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+        .nav-icon-btn {
+            width: 38px; height: 38px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            color: white; font-size: 1rem; text-decoration: none;
-            position: relative; transition: background .2s, color .2s;
+            color: rgba(255,255,255,0.75); font-size: 1rem;
+            text-decoration: none; position: relative;
+            transition: background .2s, color .2s;
+            background: transparent; border: none; cursor: pointer;
         }
-        .nav-icons a:hover { background: var(--tag-bg); color: var(--accent); }
-        .cart-btn { position: relative; }
+        .nav-icon-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
         .cart-badge {
-            position: absolute; top: 3px; right: 3px;
+            position: absolute; top: 2px; right: 2px;
             background: var(--accent); color: #fff;
-            font-size: 8px; width: 14px; height: 14px;
+            font-size: 8px; min-width: 16px; height: 16px;
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-weight: 600; line-height: 1;
-            transition: transform .2s cubic-bezier(.34,1.56,.64,1);
+            font-weight: 700; line-height: 1; padding: 0 3px;
+            transition: transform .25s cubic-bezier(.34,1.56,.64,1);
+            border: 2px solid #000;
         }
         .cart-badge.hidden { display: none; }
+
+        /* Réseaux sociaux — icônes seulement */
+        .nav-social { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
+        .nav-social a {
+            width: 34px; height: 34px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: rgba(255,255,255,0.5); font-size: .95rem;
+            text-decoration: none; transition: background .2s, color .2s;
+        }
+        .nav-social a:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+        /* Bouton menu mobile */
         .menu-toggle {
             display: none; background: none; border: none;
-            font-size: 1.3rem; color: var(--charcoal); cursor: pointer; padding: 4px;
+            font-size: 1.3rem; color: rgba(255,255,255,0.8);
+            cursor: pointer; padding: 4px; flex-shrink: 0;
+        }
+
+        /* ══ RESPONSIVE NAVBAR ═══════════════════════════════════════════════ */
+        @media (max-width: 991px) {
+            .nav-social { display: none; }
+            .nav-search { max-width: none; }
+        }
+        @media (max-width: 767px) {
+            .navbar-top { height: auto; flex-wrap: wrap; padding: 10px 14px; gap: 8px; }
+            .menu-toggle { display: flex; }
+            .brand-logo { font-size: 1rem; }
+            .nav-search { order: 3; flex: 0 0 100%; max-width: 100%; margin: 0; }
+            .nav-icons { margin-left: auto; }
         }
 
         /* ══ SIDEBAR DRAWER (mobile catégories) ══════════════════════════════ */
@@ -255,12 +352,6 @@
         .footer { margin-top: 48px; padding: 24px 0; text-align: center; color: var(--warm-gray); font-size: 12px; border-top: 1px solid var(--border); }
 
         /* ══ RESPONSIVE ══════════════════════════════════════════════════════ */
-        @media (max-width: 991px) { .nav-social a span { display: none; } }
-        @media (max-width: 767px) {
-            .nav-social { display: none; }
-            .menu-toggle { display: block; }
-            .navbar-top { padding: 0 1rem; }
-        }
     </style>
 </head>
 <body>
@@ -315,41 +406,47 @@
 
 <!-- NAVBAR -->
 <nav class="navbar-top" id="navbar">
+
+    <button class="menu-toggle" id="menuToggle" aria-label="Menu"><i class="bi bi-list"></i></button>
+
     <div class="nav-social">
-        <button class="menu-toggle" id="menuToggle"><i class="bi bi-list"></i></button>
         @if($page->facebook)
-        <a href="{{ $page->facebook }}" target="_blank" rel="noopener">
-            <i class="bi bi-facebook"></i> <span>Facebook</span>
-        </a>
+        <a href="{{ $page->facebook }}" target="_blank" rel="noopener" title="Facebook"><i class="bi bi-facebook"></i></a>
         @endif
         @if($page->whatsapp)
-        <a href="https://wa.me/{{ $page->whatsapp }}" target="_blank" rel="noopener">
-            <i class="bi bi-whatsapp"></i> <span>WhatsApp</span>
-        </a>
+        <a href="https://wa.me/{{ $page->whatsapp }}" target="_blank" rel="noopener" title="WhatsApp"><i class="bi bi-whatsapp"></i></a>
         @endif
         @if($page->instagram)
-        <a href="{{ $page->instagram }}" target="_blank" rel="noopener">
-            <i class="bi bi-instagram"></i> <span>Instagram</span>
-        </a>
+        <a href="{{ $page->instagram }}" target="_blank" rel="noopener" title="Instagram"><i class="bi bi-instagram"></i></a>
         @endif
     </div>
 
     <a href="{{ route('cabine.public', $cabine->code ?? $page->cabine->code) }}" class="brand-logo">
         @if($page->logo)
-        <img src="{{ asset('storage/'.$page->logo) }}" alt="">
+        <img src="{{ asset('storage/'.$page->logo) }}" alt="{{ $page->nom_site }}">
         @endif
         {{ $page->nom_site }}
     </a>
 
+    <div class="nav-search" id="navSearch">
+        <i class="bi bi-search search-icon"></i>
+        <input type="text" id="navSearchInput"
+               placeholder="Rechercher un produit..."
+               autocomplete="off"
+               aria-label="Rechercher un produit">
+        <button class="search-clear" id="searchClear" aria-label="Effacer"><i class="bi bi-x-lg"></i></button>
+        <div class="search-results" id="searchResults"></div>
+    </div>
+
     <div class="nav-icons">
         <a href="{{ route('boutique.suivi', $cabine->code ?? $page->cabine->code) }}"
-           title="Suivre ma commande" aria-label="Suivi commande">
+           class="nav-icon-btn" title="Suivre ma commande" aria-label="Suivi commande">
             <i class="bi bi-truck"></i>
         </a>
-        <a href="#" class="cart-btn" id="cartToggle" aria-label="Panier">
-            <i class="bi bi-bag"></i>
+        <button class="nav-icon-btn" id="cartToggle" aria-label="Panier" style="position:relative;">
+             <i class="bi bi-cart3"></i>
             <span class="cart-badge hidden" id="cartBadge">0</span>
-        </a>
+        </button>
     </div>
 </nav>
 
@@ -366,15 +463,13 @@
 const CABINE_CODE = '{{ $cabine->code ?? $page->cabine->code }}';
 const CSRF_TOKEN  = document.querySelector('meta[name="csrf-token"]').content;
 
-// ── État local du panier (miroir de la session serveur) ───────────────────
-let _cartItems = [];
-let _cartTotal = 0;
-let _cartCount = 0;
+// ── État local du panier ──────────────────────────────────────────────────
+let _cart = { items: [], total: 0, count: 0 };
 
 // ── Navbar scroll ─────────────────────────────────────────────────────────
 window.addEventListener('scroll', () => {
     document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10);
-});
+}, { passive: true });
 
 // ── Toast ─────────────────────────────────────────────────────────────────
 function showToast(msg, type = 'success') {
@@ -394,36 +489,51 @@ function updateBadge(count) {
     const badge = document.getElementById('cartBadge');
     badge.textContent = count;
     badge.classList.toggle('hidden', count === 0);
-    // micro-animation
-    badge.style.transform = 'scale(1.4)';
-    setTimeout(() => badge.style.transform = '', 200);
+    badge.style.transform = 'scale(1.5)';
+    setTimeout(() => badge.style.transform = '', 250);
 }
 
-// ── Render drawer depuis l'état local ─────────────────────────────────────
+// ── Appliquer une réponse serveur ─────────────────────────────────────────
+function applyData(data) {
+    _cart.items = data.items || [];
+    _cart.total = data.total || 0;
+    _cart.count = data.count || 0;
+    updateBadge(_cart.count);
+    renderDrawer();
+}
+
+// ── Render drawer depuis l'état local (0 appel réseau) ───────────────────
 function renderDrawer() {
     const body   = document.getElementById('drawerBody');
     const footer = document.getElementById('drawerFooter');
 
-    if (!_cartItems.length) {
-        body.innerHTML = '<div class="cart-empty"><i class="bi bi-bag"></i><p>Votre panier est vide</p></div>';
+    if (!_cart.items.length) {
+        body.innerHTML = `
+            <div class="cart-empty">
+                <i class="bi bi-bag" style="font-size:40px;display:block;margin-bottom:12px;opacity:.3;"></i>
+                <p style="color:var(--warm-gray);font-size:14px;">Votre panier est vide</p>
+            </div>`;
         footer.style.display = 'none';
         return;
     }
 
-    body.innerHTML = _cartItems.map(item => {
+    body.innerHTML = _cart.items.map(item => {
         const sub = item.prix_unitaire * item.quantite;
         const img = item.image ? `/storage/${item.image}` : '/image-box.jpeg';
         return `
-        <div class="cart-item" data-id="${item.produit_id}">
-            <img class="cart-item-img" src="${img}" alt="${item.nom}" onerror="this.src='/image-box.jpeg'">
+        <div class="cart-item" data-id="${item.produit_id}" style="animation:fadeItemIn .25s ease both;">
+            <img class="cart-item-img" src="${img}" alt="${item.nom}"
+                 onerror="this.src='/image-box.jpeg'">
             <div class="cart-item-info">
                 <div class="cart-item-name">${item.nom}</div>
                 <div class="cart-item-price">${formatPrice(item.prix_unitaire)} / unité</div>
                 <div class="cart-item-controls">
-                    <button class="qty-btn" onclick="changeQty(${item.produit_id}, -1)">−</button>
+                    <button class="qty-btn" onclick="changeQty(${item.produit_id}, -1)" aria-label="Diminuer">−</button>
                     <span class="qty-value">${item.quantite}</span>
-                    <button class="qty-btn" onclick="changeQty(${item.produit_id}, 1)">+</button>
-                    <span style="margin-left:auto;font-size:12px;font-weight:600;color:var(--charcoal);">${formatPrice(sub)}</span>
+                    <button class="qty-btn" onclick="changeQty(${item.produit_id}, 1)" aria-label="Augmenter">+</button>
+                    <span style="margin-left:auto;font-size:12px;font-weight:600;color:var(--charcoal);">
+                        ${formatPrice(sub)}
+                    </span>
                 </div>
             </div>
             <button class="cart-item-remove" onclick="removeItem(${item.produit_id})" aria-label="Supprimer">
@@ -432,118 +542,124 @@ function renderDrawer() {
         </div>`;
     }).join('');
 
-    document.getElementById('drawerTotal').textContent = formatPrice(_cartTotal);
+    document.getElementById('drawerTotal').textContent = formatPrice(_cart.total);
     footer.style.display = 'block';
 }
 
-// ── Appliquer une réponse serveur à l'état local ──────────────────────────
-function applyServerData(data) {
-    _cartItems = data.items || [];
-    _cartTotal = data.total || 0;
-    _cartCount = data.count || 0;
-    updateBadge(_cartCount);
-    renderDrawer();
-}
-
-// ── Fetch complet depuis le serveur (utilisé à l'init et à l'ouverture) ───
+// ── Sync initial depuis le serveur (1 seul appel au chargement) ───────────
 function syncCart() {
-    return fetch(`/boutique/${CABINE_CODE}/panier/data`)
+    return fetch(`/boutique/${CABINE_CODE}/panier/data`, { credentials: 'same-origin' })
         .then(r => r.json())
-        .then(data => applyServerData(data))
+        .then(data => applyData(data))
         .catch(() => {});
 }
 
-// ── Ajouter au panier ─────────────────────────────────────────────────────
-function addToCart(produitId, quantite = 1, btn) {
+// ── Ajouter au panier — INSTANTANÉ ───────────────────────────────────────
+function addToCart(produitId, quantite, btn) {
     // 1. Feedback visuel immédiat sur le bouton
     if (btn) {
         btn.disabled = true;
         const orig = btn.innerHTML;
-        btn.innerHTML = '<i class="bi bi-check2"></i> Ajouté';
-        setTimeout(() => { btn.innerHTML = orig; btn.disabled = false; }, 1500);
+        btn.innerHTML = '<i class="bi bi-check2"></i> Ajouté !';
+        btn.style.background = '#10B981';
+        setTimeout(() => {
+            btn.innerHTML = orig;
+            btn.style.background = '';
+            btn.disabled = false;
+        }, 1800);
     }
 
-    // 2. Mise à jour optimiste du badge AVANT la réponse serveur
-    const existing = _cartItems.find(i => i.produit_id === produitId);
+    // 2. Mise à jour optimiste IMMÉDIATE de l'état local
+    const existing = _cart.items.find(i => i.produit_id === produitId);
     if (existing) {
         existing.quantite += quantite;
+        _cart.total += existing.prix_unitaire * quantite;
     } else {
-        // on ne connaît pas encore le nom/prix, on incrémente juste le count
-        _cartCount += quantite;
-        updateBadge(_cartCount);
+        // On ajoute un item temporaire (sans image/nom complet) pour le badge
+        _cart.items.push({ produit_id: produitId, nom: '...', prix_unitaire: 0, quantite, image: null });
     }
-    if (existing) {
-        _cartCount += quantite;
-        _cartTotal += existing.prix_unitaire * quantite;
-        updateBadge(_cartCount);
-        renderDrawer();
-    }
+    _cart.count += quantite;
+    updateBadge(_cart.count);
+    // Ouvrir le drawer immédiatement avec l'état optimiste
+    renderDrawer();
+    openCartDrawer();
 
-    // 3. POST serveur — la réponse contient déjà items+total+count
+    // 3. POST serveur — la réponse contient items+total+count complets
     fetch(`/boutique/${CABINE_CODE}/panier/ajouter`, {
         method: 'POST',
+        credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF_TOKEN },
         body: JSON.stringify({ produit_id: produitId, quantite })
     })
     .then(r => r.json())
     .then(data => {
         if (data.success) {
-            showToast('Ajouté au panier ✓');
-            // Sync complet pour avoir les vraies données (nom, image, prix)
-            syncCart().then(() => openCartDrawer());
+            applyData(data); // remplace l'état optimiste par les vraies données
+            showToast('✓ Ajouté au panier');
         } else {
             showToast(data.message || 'Erreur', 'error');
-            syncCart(); // resync pour corriger l'état optimiste
+            syncCart(); // resync pour corriger
         }
     })
     .catch(() => { showToast('Erreur réseau', 'error'); syncCart(); });
 }
 
-// ── Changer quantité ──────────────────────────────────────────────────────
+// ── Changer quantité — INSTANTANÉ ────────────────────────────────────────
 function changeQty(produitId, delta) {
-    const item   = _cartItems.find(i => i.produit_id === produitId);
-    const newQty = Math.max(0, (item ? item.quantite : 1) + delta);
+    const item = _cart.items.find(i => i.produit_id === produitId);
+    if (!item) return;
+
+    const newQty = Math.max(0, item.quantite + delta);
 
     // Mise à jour optimiste immédiate
-    if (item) {
-        if (newQty === 0) {
-            _cartItems = _cartItems.filter(i => i.produit_id !== produitId);
-            _cartTotal -= item.prix_unitaire * item.quantite;
-            _cartCount -= item.quantite;
-        } else {
-            _cartTotal += item.prix_unitaire * delta;
-            _cartCount += delta;
-            item.quantite = newQty;
-        }
-        updateBadge(_cartCount);
-        renderDrawer();
+    _cart.total += item.prix_unitaire * delta;
+    _cart.count += delta;
+    if (newQty === 0) {
+        _cart.items = _cart.items.filter(i => i.produit_id !== produitId);
+        _cart.total -= item.prix_unitaire * item.quantite; // correction
+        _cart.count -= item.quantite;
+        // recalcul propre
+        _cart.total = _cart.items.reduce((s, i) => s + i.prix_unitaire * i.quantite, 0);
+        _cart.count = _cart.items.reduce((s, i) => s + i.quantite, 0);
+    } else {
+        item.quantite = newQty;
     }
+    updateBadge(_cart.count);
+    renderDrawer();
 
     fetch(`/boutique/${CABINE_CODE}/panier/mettre-a-jour`, {
         method: 'POST',
+        credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF_TOKEN },
         body: JSON.stringify({ produit_id: produitId, quantite: newQty })
     })
     .then(r => r.json())
-    .then(d => { if (d.success) applyServerData({ items: _cartItems, total: _cartTotal, count: _cartCount }); else syncCart(); })
+    .then(d => { if (d.success) applyData(d); else syncCart(); })
     .catch(() => syncCart());
 }
 
-// ── Supprimer un article ──────────────────────────────────────────────────
+// ── Supprimer un article — INSTANTANÉ ────────────────────────────────────
 function removeItem(produitId) {
-    const item = _cartItems.find(i => i.produit_id === produitId);
+    // Animation de sortie
+    const el = document.querySelector(`.cart-item[data-id="${produitId}"]`);
+    if (el) {
+        el.style.transition = 'all .2s ease';
+        el.style.opacity = '0';
+        el.style.transform = 'translateX(20px)';
+    }
 
     // Mise à jour optimiste immédiate
+    const item = _cart.items.find(i => i.produit_id === produitId);
     if (item) {
-        _cartTotal -= item.prix_unitaire * item.quantite;
-        _cartCount -= item.quantite;
-        _cartItems = _cartItems.filter(i => i.produit_id !== produitId);
-        updateBadge(_cartCount);
-        renderDrawer();
+        _cart.total -= item.prix_unitaire * item.quantite;
+        _cart.count -= item.quantite;
+        _cart.items = _cart.items.filter(i => i.produit_id !== produitId);
     }
+    setTimeout(() => { updateBadge(_cart.count); renderDrawer(); }, 200);
 
     fetch(`/boutique/${CABINE_CODE}/panier/supprimer`, {
         method: 'POST',
+        credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF_TOKEN },
         body: JSON.stringify({ produit_id: produitId })
     })
@@ -557,8 +673,7 @@ function openCartDrawer() {
     document.getElementById('cartDrawer').classList.add('open');
     document.getElementById('cartOverlay').classList.add('open');
     document.body.style.overflow = 'hidden';
-    renderDrawer(); // affiche l'état local immédiatement
-    syncCart();     // puis confirme avec le serveur en arrière-plan
+    renderDrawer(); // affiche l'état local immédiatement, sans attendre le réseau
 }
 function closeCartDrawer() {
     document.getElementById('cartDrawer').classList.remove('open');
@@ -567,14 +682,29 @@ function closeCartDrawer() {
 }
 document.getElementById('cartToggle').addEventListener('click', e => {
     e.preventDefault();
-    document.getElementById('cartDrawer').classList.contains('open') ? closeCartDrawer() : openCartDrawer();
+    document.getElementById('cartDrawer').classList.contains('open')
+        ? closeCartDrawer()
+        : openCartDrawer();
 });
 document.getElementById('cartClose').addEventListener('click', closeCartDrawer);
 document.getElementById('cartOverlay').addEventListener('click', closeCartDrawer);
 
+// Fermer avec Escape
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeCartDrawer(); closeCatDrawer(); }
+});
+
 // ── Category sidebar (mobile) ─────────────────────────────────────────────
-function openCatDrawer()  { document.getElementById('catDrawer').classList.add('open'); document.getElementById('catOverlay').classList.add('open'); document.body.style.overflow='hidden'; }
-function closeCatDrawer() { document.getElementById('catDrawer').classList.remove('open'); document.getElementById('catOverlay').classList.remove('open'); document.body.style.overflow=''; }
+function openCatDrawer()  {
+    document.getElementById('catDrawer').classList.add('open');
+    document.getElementById('catOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+function closeCatDrawer() {
+    document.getElementById('catDrawer').classList.remove('open');
+    document.getElementById('catOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+}
 document.getElementById('menuToggle').addEventListener('click', openCatDrawer);
 document.getElementById('catDrawerClose').addEventListener('click', closeCatDrawer);
 document.getElementById('catOverlay').addEventListener('click', closeCatDrawer);
@@ -583,10 +713,12 @@ document.getElementById('catOverlay').addEventListener('click', closeCatDrawer);
 function filterByCategory(catId, el) {
     document.querySelectorAll('.category-chip, .filter-item').forEach(i => i.classList.remove('active'));
     if (el) el.classList.add('active');
+    // Sync les chips desktop avec le filtre actif
     document.querySelectorAll(`.category-chip[data-filter="${catId}"]`).forEach(c => c.classList.add('active'));
-    document.querySelectorAll('.product-card').forEach(p => {
-        const match = !catId || (p.dataset.category||'').toString() === catId.toString();
+    document.querySelectorAll('.product-card').forEach((p, i) => {
+        const match = !catId || (p.dataset.category || '').toString() === catId.toString();
         p.style.display = match ? '' : 'none';
+        if (match) p.style.animationDelay = `${i * 0.04}s`;
     });
     closeCatDrawer();
 }
@@ -594,8 +726,133 @@ document.querySelectorAll('.category-chip').forEach(chip => {
     chip.addEventListener('click', () => filterByCategory(chip.dataset.filter, chip));
 });
 
-// ── Init : charge le panier au chargement de la page ─────────────────────
+// ── Recherche produits en temps réel ─────────────────────────────────────
+const searchInput = document.getElementById('productSearch');
+if (searchInput) {
+    searchInput.addEventListener('input', function () {
+        const q = this.value.trim().toLowerCase();
+        document.querySelectorAll('.product-card').forEach(p => {
+            const name = (p.dataset.name || '').toLowerCase();
+            p.style.display = (!q || name.includes(q)) ? '' : 'none';
+        });
+    });
+}
+
+// ── Animation CSS pour les items du drawer ────────────────────────────────
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes fadeItemIn {
+        from { opacity:0; transform:translateX(-10px); }
+        to   { opacity:1; transform:translateX(0); }
+    }
+    .cart-badge { transition: transform .25s cubic-bezier(.34,1.56,.64,1); }
+`;
+document.head.appendChild(style);
+
+// ── Init : charge le panier au chargement ─────────────────────────────────
 syncCart();
+
+// ── Recherche produits dans la navbar ─────────────────────────────────────
+(function () {
+    const input    = document.getElementById('navSearchInput');
+    const results  = document.getElementById('searchResults');
+    const clearBtn = document.getElementById('searchClear');
+    if (!input) return;
+
+    // Données produits injectées depuis Blade (disponibles sur la page accueil)
+    // On lit les product-cards du DOM pour éviter un appel API supplémentaire
+    function getProducts() {
+        return Array.from(document.querySelectorAll('.product-card')).map(card => ({
+            id:       card.dataset.id || '',
+            name:     card.dataset.name || '',
+            category: card.querySelector('.product-cat')?.textContent?.trim() || '',
+            price:    card.querySelector('.product-price, .price-badge')?.textContent?.trim() || '',
+            img:      card.querySelector('img')?.src || '',
+            url:      card.querySelector('a[href]')?.href || '#',
+        }));
+    }
+
+    function renderResults(query) {
+        if (!query) { results.classList.remove('open'); return; }
+
+        const q = query.toLowerCase();
+        const matches = getProducts().filter(p =>
+            p.name.toLowerCase().includes(q) ||
+            p.category.toLowerCase().includes(q)
+        ).slice(0, 6);
+
+        if (!matches.length) {
+            results.innerHTML = `<div class="search-no-result">Aucun produit trouvé pour "<strong>${query}</strong>"</div>`;
+        } else {
+            results.innerHTML = matches.map(p => `
+                <a class="search-result-item" href="${p.url}">
+                    <img class="search-result-img" src="${p.img}" alt="${p.name}"
+                         onerror="this.src='/image-box.jpeg'">
+                    <div style="min-width:0;flex:1;">
+                        <div class="search-result-name">${p.name}</div>
+                        <div class="search-result-price">${p.price}</div>
+                        <div class="search-result-cat">${p.category}</div>
+                    </div>
+                </a>`).join('');
+        }
+        results.classList.add('open');
+    }
+
+    // Aussi filtrer les cards visibles sur la page
+    function filterCards(query) {
+        const q = query.toLowerCase();
+        let visible = 0;
+        document.querySelectorAll('.product-card').forEach(card => {
+            const match = !q || (card.dataset.name || '').toLowerCase().includes(q);
+            card.style.display = match ? '' : 'none';
+            if (match) visible++;
+        });
+        const counter = document.getElementById('resultCount');
+        if (counter) counter.textContent = visible + ' produit(s)';
+    }
+
+    let debounceTimer;
+    input.addEventListener('input', function () {
+        const q = this.value.trim();
+        clearBtn.style.display = q ? 'block' : 'none';
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            renderResults(q);
+            filterCards(q);
+        }, 180);
+    });
+
+    clearBtn.addEventListener('click', () => {
+        input.value = '';
+        clearBtn.style.display = 'none';
+        results.classList.remove('open');
+        filterCards('');
+        input.focus();
+    });
+
+    // Fermer le dropdown en cliquant ailleurs
+    document.addEventListener('click', e => {
+        if (!document.getElementById('navSearch').contains(e.target)) {
+            results.classList.remove('open');
+        }
+    });
+
+    // Navigation clavier dans les résultats
+    input.addEventListener('keydown', e => {
+        const items = results.querySelectorAll('.search-result-item');
+        const active = results.querySelector('.search-result-item:focus');
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            (active ? active.nextElementSibling || items[0] : items[0])?.focus();
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            (active ? active.previousElementSibling || items[items.length-1] : items[items.length-1])?.focus();
+        } else if (e.key === 'Escape') {
+            results.classList.remove('open');
+            input.blur();
+        }
+    });
+})();
 </script>
 @stack('scripts')
 </body>

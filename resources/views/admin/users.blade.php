@@ -257,93 +257,32 @@
     </div>
 </div>
 
-<!-- Bootstrap Icons -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 
-<style>
-    .card {
-        border: 2px solid #000;
-    }
-    
-    .card-header {
-        border-bottom: 2px solid #000 !important;
-    }
-    
-    .table th, .table td {
-        border-color: #000 !important;
-    }
-    
-    .btn:hover {
-        opacity: 0.9;
-    }
-    
-    .form-control:focus, .form-select:focus {
-        border-color: #ffde59;
-        box-shadow: 0 0 0 0.2rem rgba(255, 222, 89, 0.25);
-    }
-</style>
-
+@push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialiser les tooltips
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    const tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el));
 
-    // Filtrage des utilisateurs
     function filterUsers() {
-        const searchText = document.querySelector('.user-search-box').value.toLowerCase().trim();
-        const roleValue = document.querySelector('.user-role-filter').value.toLowerCase();
-        const cabineValue = document.querySelector('.user-cabine-filter').value;
-        
+        const q     = document.querySelector('.user-search-box').value.toLowerCase().trim();
+        const role  = document.querySelector('.user-role-filter').value.toLowerCase();
+        const cab   = document.querySelector('.user-cabine-filter').value;
         document.querySelectorAll('.user-row').forEach(row => {
-            const nom = row.cells[0].textContent.toLowerCase();
+            const nom   = row.cells[0].textContent.toLowerCase();
             const email = row.cells[2].textContent.toLowerCase();
-            const roleBadge = row.cells[4].querySelector('.badge');
-            const role = roleBadge ? roleBadge.textContent.toLowerCase() : '';
-            const cabineId = row.cells[3].querySelector('.badge') ? 
-                           row.cells[3].querySelector('.badge').getAttribute('data-cabine-id') : '';
-            
-            const matchesSearch = !searchText || 
-                                nom.includes(searchText) || 
-                                email.includes(searchText);
-            
-            const matchesRole = !roleValue || role.includes(roleValue);
-            const matchesCabine = !cabineValue || cabineId === cabineValue;
-            
-            row.style.display = (matchesSearch && matchesRole && matchesCabine) ? '' : 'none';
+            const badge = row.cells[4].querySelector('.badge');
+            const r     = badge ? badge.textContent.toLowerCase() : '';
+            const show  = (!q || nom.includes(q) || email.includes(q)) && (!role || r.includes(role));
+            row.style.display = show ? '' : 'none';
         });
     }
-
-    // Événements de filtrage
-    let searchTimeout;
-    document.querySelector('.user-search-box').addEventListener('input', function() {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(filterUsers, 300);
-    });
-    
+    let t;
+    document.querySelector('.user-search-box').addEventListener('input', () => { clearTimeout(t); t = setTimeout(filterUsers, 250); });
     document.querySelector('.user-role-filter').addEventListener('change', filterUsers);
     document.querySelector('.user-cabine-filter').addEventListener('change', filterUsers);
-
-    // Gestion du modal des utilisateurs de cabine
-    const cabineUsersModal = document.getElementById('cabineUsersModal');
-    if (cabineUsersModal) {
-        cabineUsersModal.addEventListener('show.bs.modal', function (event) {
-            const button = event.relatedTarget;
-            const cabineId = button.getAttribute('data-cabine-id');
-            console.log('Loading users for cabine:', cabineId);
-        });
-    }
-
-    // Auto-focus sur le premier champ du modal
-    const userModal = document.getElementById('exampleModal');
-    if (userModal) {
-        userModal.addEventListener('shown.bs.modal', function () {
-            document.getElementById('nom').focus();
-        });
-    }
+    document.getElementById('exampleModal')?.addEventListener('shown.bs.modal', () => document.getElementById('nom')?.focus());
 });
 </script>
+@endpush
 
 @endsection

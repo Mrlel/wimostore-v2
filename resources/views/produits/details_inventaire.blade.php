@@ -105,7 +105,7 @@
     <div class="filter-section">
         <form method="GET" class="row g-3 align-items-end">
             <div class="col-md-3">
-                <label class="form-label fw-semibold">Date de début</label>
+                <label class="form-label fw-semibold text-dark">Date de début</label>
                 <input type="date" name="start_date" class="form-control" value="{{ $start }}">
             </div>
             <div class="col-md-3">

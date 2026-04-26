@@ -509,6 +509,50 @@
     </div>
 </div>
 
+@php $hasBoutique = \App\Models\CabinePage::where('cabine_id', auth()->user()->cabine_id)->exists(); @endphp
+@if(!$hasBoutique)
+{{-- Bannière "Créer ma boutique" pour les utilisateurs sans boutique --}}
+<div style="
+    background: linear-gradient(135deg, #111 0%, #1a1a1a 100%);
+    border: 1px solid rgba(240,198,29,0.3);
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+">
+    <div style="display:flex;align-items:center;gap:14px;">
+        <div style="
+            width:48px;height:48px;border-radius:12px;
+            background:rgba(240,198,29,0.12);
+            border:1px solid rgba(240,198,29,0.25);
+            display:flex;align-items:center;justify-content:center;
+            font-size:1.4rem;flex-shrink:0;
+        ">🛍️</div>
+        <div>
+            <div style="color:#fff;font-weight:700;font-size:0.95rem;margin-bottom:3px;">
+                Vous n'avez pas encore de boutique en ligne
+            </div>
+            <div style="color:rgba(255,255,255,0.5);font-size:0.82rem;">
+                Créez votre vitrine en quelques minutes et commencez à vendre en ligne.
+            </div>
+        </div>
+    </div>
+    <a href="{{ route('Ma_boutique.create') }}" style="
+        background:#f0c61d;color:#000;font-weight:700;
+        padding:10px 22px;border-radius:8px;
+        text-decoration:none;font-size:0.88rem;
+        white-space:nowrap;flex-shrink:0;
+        transition:all .2s;
+    " onmouseover="this.style.background='#e0b800'" onmouseout="this.style.background='#f0c61d'">
+        <i class="bi bi-shop me-1"></i> Créer ma boutique
+    </a>
+</div>
+@endif
+
 <!-- Filtre Période -->
 <div class="period-filter d-flex flex-wrap gap-3">
     <form method="GET" action="{{ route('dashboard') }}" class="d-flex align-items-center justify-content-between">

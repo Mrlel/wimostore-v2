@@ -3,232 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hors ligne - Digital Solution Pro</title>
-    
-    <!-- PWA Meta Tags -->
+    <title>Hors ligne — WimoStock</title>
     <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#ffde59">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="DSP Cabine">
-    
-    <!-- Icons -->
-    <link rel="apple-touch-icon" href="/logo.jpg">
-    <link rel="shortcut icon" href="/logo.jpg" type="image/x-icon">
-    
-    <!-- Stylesheets -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+    <meta name="theme-color" content="#f0c61d">
+    <link rel="apple-touch-icon" href="/icons/wimo-192x192.png">
+    <link rel="shortcut icon" href="/wim.png">
     <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            background: linear-gradient(135deg, #ffde59 0%, #ffed4e 100%);
-            min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        .offline-container {
+            font-family: -apple-system, BlinkMacSystemFont, 'DM Sans', sans-serif;
+            background: #000;
+            color: #fff;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
         }
-        
-        .offline-card {
-            background: white;
+        .card {
+            background: #111;
+            border: 1px solid rgba(240,198,29,0.15);
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            padding: 3rem;
+            padding: 48px 36px;
             text-align: center;
-            max-width: 500px;
+            max-width: 420px;
             width: 100%;
-            animation: slideUp 0.6s ease-out;
+            animation: fadeUp .5s ease;
         }
-        
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        @keyframes fadeUp {
+            from { opacity:0; transform:translateY(24px); }
+            to   { opacity:1; transform:translateY(0); }
         }
-        
-        .offline-icon {
-            font-size: 4rem;
-            color: #ffde59;
-            margin-bottom: 1.5rem;
-            animation: pulse 2s infinite;
+        .logo {
+            width: 72px; height: 72px;
+            border-radius: 16px;
+            margin: 0 auto 24px;
+            display: block;
         }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-        
-        .offline-title {
-            color: #333;
-            font-weight: 700;
-            margin-bottom: 1rem;
+        .icon-wrap {
+            width: 72px; height: 72px;
+            background: rgba(240,198,29,0.1);
+            border: 1px solid rgba(240,198,29,0.2);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 24px;
             font-size: 2rem;
+            animation: pulse 2.5s ease-in-out infinite;
         }
-        
-        .offline-message {
-            color: #666;
-            margin-bottom: 2rem;
-            font-size: 1.1rem;
-            line-height: 1.6;
+        @keyframes pulse {
+            0%,100% { transform: scale(1); }
+            50%      { transform: scale(1.08); }
         }
-        
-        .retry-btn {
-            background: #ffde59;
-            border: none;
-            color: #000;
-            padding: 12px 30px;
-            border-radius: 25px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
+        h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 10px; }
+        p  { color: rgba(255,255,255,0.5); font-size: 0.9rem; line-height: 1.6; margin-bottom: 28px; }
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: #f0c61d; color: #000;
+            border: none; border-radius: 50px;
+            padding: 12px 28px; font-size: 0.9rem; font-weight: 600;
+            cursor: pointer; transition: all .2s ease;
         }
-        
-        .retry-btn:hover {
-            background: #ffd700;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(255, 222, 89, 0.3);
-            color: #000;
+        .btn:hover { background: #ffd93d; transform: translateY(-2px); }
+        .status-bar {
+            position: fixed; top: 16px; right: 16px;
+            background: rgba(220,53,69,0.9);
+            color: #fff; padding: 6px 14px;
+            border-radius: 20px; font-size: 0.78rem; font-weight: 600;
+            display: flex; align-items: center; gap: 6px;
+            backdrop-filter: blur(8px);
+            transition: background .3s;
         }
-        
-        .features-list {
-            text-align: left;
-            margin-top: 2rem;
-            padding: 1.5rem;
-            background: #f8f9fa;
-            border-radius: 15px;
-        }
-        
-        .features-list h6 {
-            color: #333;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-        
-        .features-list ul {
-            margin: 0;
-            padding-left: 1.2rem;
-        }
-        
-        .features-list li {
-            color: #666;
-            margin-bottom: 0.5rem;
-        }
-        
-        .status-indicator {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #dc3545;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .status-indicator.online {
-            background: #28a745;
-        }
+        .status-bar.online { background: rgba(40,167,69,0.9); }
+        .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
     </style>
 </head>
 <body>
-    <div class="status-indicator" id="statusIndicator">
-        <i class="fas fa-wifi"></i>
-        <span>Hors ligne</span>
+    <div class="status-bar" id="statusBar">
+        <span class="dot"></span>
+        <span id="statusText">Hors ligne</span>
     </div>
-    
-    <div class="offline-container">
-        <div class="offline-card">
-            <div class="offline-icon">
-                <i class="fas fa-wifi-slash"></i>
-            </div>
-            
-            <h1 class="offline-title">Vous êtes hors ligne</h1>
-            
-            <p class="offline-message">
-                Il semble que vous n'ayez pas de connexion internet. 
-                Ne vous inquiétez pas, vous pouvez toujours utiliser certaines fonctionnalités de l'application.
-            </p>
-            
-            <a href="javascript:void(0)" class="retry-btn" onclick="checkConnection()">
-                <i class="fas fa-sync-alt me-2"></i>
-                Réessayer la connexion
-            </a>
-            
-            <div class="features-list">
-                <h6><i class="fas fa-check-circle me-2 text-success"></i>Fonctionnalités disponibles hors ligne :</h6>
-                <ul>
-                    <li>Consultation des notifications mises en cache</li>
-                    <li>Navigation dans l'interface</li>
-                    <li>Consultation des données mises en cache</li>
-                    <li>Utilisation des fonctionnalités de base</li>
-                </ul>
-            </div>
-        </div>
+
+    <div class="card">
+        <img src="/icons/wimo-192x192.png" class="logo" alt="WimoStock" onerror="this.style.display='none'">
+        <div class="icon-wrap">📡</div>
+        <h1>Vous êtes hors ligne</h1>
+        <p>Vérifiez votre connexion internet et réessayez.<br>Les données mises en cache restent accessibles.</p>
+        <button class="btn" onclick="retry()">↺ &nbsp;Réessayer</button>
     </div>
-    
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
-        // Vérifier la connexion
-        function checkConnection() {
+        function retry() {
             if (navigator.onLine) {
-                window.location.reload();
+                window.location.href = '/dashboard';
             } else {
-                // Afficher un message temporaire
-                const btn = document.querySelector('.retry-btn');
-                const originalText = btn.innerHTML;
-                btn.innerHTML = '<i class="fas fa-times me-2"></i>Toujours hors ligne';
+                const btn = document.querySelector('.btn');
+                btn.textContent = '✗  Toujours hors ligne';
                 btn.style.background = '#dc3545';
-                btn.style.color = 'white';
-                
+                btn.style.color = '#fff';
                 setTimeout(() => {
-                    btn.innerHTML = originalText;
-                    btn.style.background = '#ffde59';
+                    btn.innerHTML = '↺ &nbsp;Réessayer';
+                    btn.style.background = '#f0c61d';
                     btn.style.color = '#000';
                 }, 2000);
             }
         }
-        
-        // Écouter les changements de statut de connexion
-        window.addEventListener('online', () => {
-            document.getElementById('statusIndicator').innerHTML = '<i class="fas fa-wifi"></i><span>En ligne</span>';
-            document.getElementById('statusIndicator').classList.add('online');
-            
-            // Recharger automatiquement après 1 seconde
-            setTimeout(() => {
-                window.location.reload();
-            }, 1000);
-        });
-        
-        window.addEventListener('offline', () => {
-            document.getElementById('statusIndicator').innerHTML = '<i class="fas fa-wifi"></i><span>Hors ligne</span>';
-            document.getElementById('statusIndicator').classList.remove('online');
-        });
-        
-        // Vérifier le statut au chargement
-        if (navigator.onLine) {
-            document.getElementById('statusIndicator').innerHTML = '<i class="fas fa-wifi"></i><span>En ligne</span>';
-            document.getElementById('statusIndicator').classList.add('online');
+
+        function updateStatus() {
+            const bar = document.getElementById('statusBar');
+            const txt = document.getElementById('statusText');
+            if (navigator.onLine) {
+                bar.classList.add('online');
+                txt.textContent = 'En ligne';
+                setTimeout(() => window.location.href = '/dashboard', 1200);
+            } else {
+                bar.classList.remove('online');
+                txt.textContent = 'Hors ligne';
+            }
         }
+
+        window.addEventListener('online',  updateStatus);
+        window.addEventListener('offline', updateStatus);
+        updateStatus();
     </script>
 </body>
 </html>

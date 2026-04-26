@@ -57,6 +57,14 @@ Route::get('/recu/{vente}', [VenteController::class, 'voirRecuPublic'])
 Route::get('/marketplace', [MarketplaceController::class, 'index'])->name('marketplace');
 Route::get('/panier', [MarketplaceController::class, 'panier'])->name('panier');
 
+// Marquer le popup boutique comme vu
+Route::post('/api/mark-popup-seen', function () {
+    if (auth()->check()) {
+        auth()->user()->update(['boutique_popup_seen' => true]);
+    }
+    return response()->json(['ok' => true]);
+})->middleware('auth');
+
 Route::get('password/forgot', [PasswordResetController::class, 'showLinkRequestForm'])->name('password.request');
 Route::post('password/email', [PasswordResetController::class, 'sendResetLinkEmail'])->name('password.email');
 Route::get('password/reset/{token}', [PasswordResetController::class, 'showResetForm'])->name('password.reset');
@@ -229,6 +237,7 @@ Route::middleware(['auth', 'force.password.change', 'check.abonnement'])->group(
     Route::resource('gestionnaires', GestionnaireController::class)->except(['show'])->middleware('can:manage-gestionnaires');
     Route::get('Ma_boutique', [BoutiqueController::class, 'Ma_boutique'])->name('Ma_boutique');
     Route::get('Ma_boutique/create', [BoutiqueController::class, 'Ma_boutique_create'])->name('Ma_boutique.create');
+    Route::get('Ma_boutique/success', [BoutiqueController::class, 'Ma_boutique_success'])->name('Ma_boutique.success');
     Route::post('Ma_boutique', [BoutiqueController::class, 'Ma_boutique_store'])->name('Ma_boutique.store');
     Route::get('Ma_boutique/{boutique}/edit', [BoutiqueController::class, 'Ma_boutique_edit'])->name('Ma_boutique.edit');
     Route::put('Ma_boutique/{boutique}', [BoutiqueController::class, 'Ma_boutique_update'])->name('Ma_boutique.update');
